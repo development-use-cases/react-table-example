@@ -1,3 +1,4 @@
 import React from "react";
+import Routes from "../routes";
 
-export default (props) => <h1>Hello, World!</h1>;
+export default () => <>{Routes}</>;
