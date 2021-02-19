@@ -1,1 +1,1 @@
-json.array! @shares, partial: "api/shares/share", as: :share
+json.array! @shares, partial: 'api/shares/share', as: :share

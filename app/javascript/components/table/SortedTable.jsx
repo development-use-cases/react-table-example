@@ -3,58 +3,68 @@ import React, { useState, useEffect } from "react";
 import Body from "./Body";
 import Header from "./Header";
 
-const ColumnName = ({ label, sorting, onClick }) => (
-  <span style={{ cursor: "pointer" }} onClick={() => onClick(label)}>
-    {label} {sorting === "asc" ? "▼" : "▲"}
-  </span>
-);
-
-const sortingFunction = (sorting) => (a, b) => {
-  for (let order of sorting) {
-    if (a[order.label] === b[order.label]) {
-      return 0;
-    }
-
-    if (a[order.label] < b[order.label]) {
-      return sorting == "asc" ? -1 : 1;
-    }
-
-    return sorting == "asc" ? 1 : -1;
+const displaySorting = (sorting) => {
+  if (sorting == "desc") {
+    return "▼";
+  } else if (sorting == "asc") {
+    return "▲";
+  } else if (sorting == null) {
+    return "";
+  } else {
+    throw new Error(`Unsupported argument ${sorting}!`);
   }
 };
 
-const opposite = (sorting) => (sorting === "asc" ? "desc" : "asc");
+const ColumnName = ({ label, sorting, onClick }) => (
+  <span style={{ cursor: "pointer" }} onClick={() => onClick(label)}>
+    {label} {displaySorting(sorting)}
+  </span>
+);
 
-const SortedTable = ({ data, columns }) => {
+const nextSorting = (sorting) => {
+  const nextAfter = {
+    "asc": "desc",
+    "desc": null,
+    [null]: "asc"
+  };
+  return nextAfter[sorting];
+};
+
+const SortedTable = ({ getData }) => {
   const [sorting, setSorting] = useState([]);
   const [rows, setRows] = useState([]);
+  const [columns, setColumns] = useState([]);
 
   useEffect(() => {
     setSorting(
-      columns.map((columnLabel) => ({ label: columnLabel, sorting: "asc" }))
+      columns.map((columnLabel) => ({ label: columnLabel, sorting: null }))
     );
   }, [columns]);
 
   useEffect(() => {
-    setRows(data.slice());
-  }, [data]);
+    getData([]).then(data => {
+      setColumns(Object.keys(data[0]));
+      setRows(data);
+    });
+  }, [getData]);
+
+  useEffect(() => {
+    getData(sorting).then(data => {
+      setRows(data);
+    });
+  }, [sorting]);
 
   const changeSorting = (columnLabel) => {
-    let newSorting = sorting.map((column) =>
-      column.label === columnLabel
-        ? {
-            label: column.label,
-            sorting: opposite(column.sorting),
-          }
-        : column
-    );
+    let newSorting = sorting.filter(({ label }) => label != columnLabel);
+    newSorting.unshift({
+      label: columnLabel,
+      sorting: nextSorting(sorting.find(({ label }) => label == columnLabel).sorting)
+    });
     setSorting(newSorting);
-    let newRows = rows.sort(sortingFunction(newSorting));
-    setRows(newRows);
   };
 
-  const columnNames = sorting.map((col) => (
-    <ColumnName {...col} onClick={changeSorting} />
+  const columnNames = columns.map((col) => (
+    <ColumnName {...sorting.find(({ label }) => label == col)} onClick={changeSorting} />
   ));
 
   return (

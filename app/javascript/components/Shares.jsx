@@ -1,16 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import { getShares } from "../api/shares";
-import SortedTable from "./table/SortedTable";
+import SortedTable from './table/SortedTable';
+import { get } from '../api/get';
+
+const getData = async (sorting) => {
+  return await get("/api/shares.json?" + queryFromSorting(sorting));
+};
+
+const queryFromSorting = (sorting) => {
+  return sorting.map(({ label, sorting }) => {
+    if (sorting == null) {
+      return null;
+    } else {
+      return `sort[${label}]=${sorting}`;
+    }
+  }).filter(s => s !== null).join('&');
+};
 
 const Shares = () => {
-  const [shares, setShares] = useState([]);
-
-  useEffect(() => {
-    getShares().then((shares) => setShares(shares));
-  }, []);
-
-  return <SortedTable data={shares} columns={Object.keys(shares[0] || {})} />;
-};
+  return (
+    <>
+      <h2>Shares</h2>
+      <SortedTable getData={getData} />
+    </>
+  );
+}
 
 export default Shares;

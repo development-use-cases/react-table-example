@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import Table from "./table/index";
+import SortedTable from "./table/SortedTable";
 
 import { getQuotes } from "../api/quotes";
 import { Link, useParams } from "react-router-dom";
@@ -22,7 +22,7 @@ const Quotes = () => {
     getQuotes(date).then((quotes) => setQuotes(processQuotes(quotes)));
   }, []);
 
-  return <Table data={quotes} />;
+  return <SortedTable data={quotes} />;
 };
 
 export default Quotes;
