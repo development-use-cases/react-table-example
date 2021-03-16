@@ -37,7 +37,7 @@ const SortedTable = ({ getData }) => {
 
   useEffect(() => {
     setSorting(
-      columns.map((columnLabel) => ({ label: columnLabel, sorting: null }))
+      columns.map(label => ({ label, sorting: null }))
     );
   }, [columns]);
 
@@ -49,7 +49,13 @@ const SortedTable = ({ getData }) => {
   }, [getData]);
 
   useEffect(() => {
-    getData(sorting).then(data => {
+    let sortingAsObject = {};
+    sorting.forEach(({ label, sorting }) => {
+      if (sorting != null) {
+        sortingAsObject[label] = sorting;
+      }
+    });
+    getData(sortingAsObject).then(data => {
       setRows(data);
     });
   }, [sorting]);

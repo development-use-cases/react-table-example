@@ -16,13 +16,10 @@ const processQuotes = (quotes) =>
 const Quotes = () => {
   const { date } = useParams();
 
-  const [quotes, setQuotes] = useState([]);
-
-  useEffect(() => {
-    getQuotes(date).then((quotes) => setQuotes(processQuotes(quotes)));
-  }, []);
-
-  return <SortedTable data={quotes} />;
+  return <SortedTable getData={(sorting) => {
+    console.log(sorting);
+    return getQuotes(date, { sort: sorting });
+  }} />;
 };
 
 export default Quotes;

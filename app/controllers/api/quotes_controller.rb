@@ -1,5 +1,6 @@
 class Api::QuotesController < ApplicationController
   def index
+    puts sort_params
     @quotes = Quote.includes(:share).where(date: params[:date]).order(sort_params)
   end
 

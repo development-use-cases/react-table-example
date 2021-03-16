@@ -20,4 +20,9 @@ end
 group :development do
   gem 'listen', '~> 3.3'
   gem 'spring'
+  gem "factory_bot_rails", "~> 6.1"
+end
+
+group :test do
+  gem "rspec-rails", "~> 5.0"
 end

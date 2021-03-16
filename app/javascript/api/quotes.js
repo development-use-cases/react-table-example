@@ -1,5 +1,4 @@
-import axios from 'axios';
+import { get } from './get';
 
-export const getQuotes = (date) => axios
-  .get(`/api/quotes/${date}.json`)
-  .then(response => response.data);
+export const getQuotes = (date, params = {}) =>
+  get(`/api/quotes/${date}.json`, params);
