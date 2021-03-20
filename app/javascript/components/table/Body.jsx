@@ -3,7 +3,7 @@ import Row from "./Row";
 
 const Body = ({ columns, data }) => (
   <tbody>
-    {data.map((row, i) => (
+    {(data || []).map((row, i) => (
       <Row key={i} columns={columns} object={row} />
     ))}
   </tbody>

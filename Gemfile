@@ -18,11 +18,12 @@ group :development, :test do
 end
 
 group :development do
+  gem 'factory_bot_rails', '~> 6.1'
+  gem 'faker', '~> 2.17'
   gem 'listen', '~> 3.3'
   gem 'spring'
-  gem "factory_bot_rails", "~> 6.1"
 end
 
 group :test do
-  gem "rspec-rails", "~> 5.0"
+  gem 'rspec-rails', '~> 5.0'
 end

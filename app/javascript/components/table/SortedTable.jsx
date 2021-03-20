@@ -43,7 +43,7 @@ const SortedTable = ({ getData }) => {
 
   useEffect(() => {
     getData([]).then(data => {
-      setColumns(Object.keys(data[0]));
+      setColumns(Object.keys((data || [{}])[0]));
       setRows(data);
     });
   }, [getData]);

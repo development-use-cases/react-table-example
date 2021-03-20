@@ -10,6 +10,6 @@ const toQueryArray = (params, wrap = false) => Object.keys(params)
     }
   });
 
-export const get = (path, params) => axios
+export const get = (path, params = {}) => axios
   .get(`${path}?${toQueryArray(params).join("&")}`)
   .then(response => response.data);

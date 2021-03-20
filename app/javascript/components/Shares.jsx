@@ -1,20 +1,10 @@
 import React from "react";
 
 import SortedTable from './table/SortedTable';
-import { get } from '../api/get';
+import { getShares } from '../api/shares';
 
 const getData = async (sorting) => {
-  return await get("/api/shares.json?" + queryFromSorting(sorting));
-};
-
-const queryFromSorting = (sorting) => {
-  return sorting.map(({ label, sorting }) => {
-    if (sorting == null) {
-      return null;
-    } else {
-      return `sort[${label}]=${sorting}`;
-    }
-  }).filter(s => s !== null).join('&');
+  return await getShares({ sort: sorting });
 };
 
 const Shares = () => {
