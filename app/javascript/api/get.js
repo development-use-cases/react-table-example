@@ -1,15 +1,17 @@
 import axios from 'axios';
 
-const toQueryArray = (params, wrap = false) => Object.keys(params)
-  .map(key => {
-    let value = params[key];
-    if (typeof value == 'object') {
-      return toQueryArray(value, true).map(p => wrap ? `[${key}]${p}` : `${key}${p}`).join("&");
-    } else {
-      return wrap ? `[${key}]=${value}` : `${key}=${value}`;
-    }
+import qs from 'qs';
+
+// Format nested params
+axios.interceptors.request.use(config => {
+  config.paramsSerializer = params => qs.stringify(params, {
+    arrayFormat: "brackets",
+    encode: false
   });
 
+  return config;
+});
+
 export const get = (path, params = {}) => axios
-  .get(`${path}?${toQueryArray(params).join("&")}`)
+  .get(path, { params })
   .then(response => response.data);

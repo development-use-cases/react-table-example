@@ -1,17 +1,13 @@
 import React from "react";
 
-import SortedTable from './table/SortedTable';
+import Table from './table';
 import { getShares } from '../api/shares';
-
-const getData = async (sorting = {}) => {
-  return await getShares({ sort: sorting });
-};
 
 const Shares = () => {
   return (
     <>
       <h2>Shares</h2>
-      <SortedTable getData={getData} />
+      <Table getData={sort => getShares({ sort })} />
     </>
   );
 }
