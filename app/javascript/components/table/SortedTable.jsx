@@ -42,11 +42,12 @@ const SortedTable = ({ getData }) => {
   }, [columns]);
 
   useEffect(() => {
-    getData([]).then(data => {
-      setColumns(Object.keys((data || [{}])[0]));
+    getData().then(data => {
+      debugger;
+      setColumns(Object.keys(data[0]));
       setRows(data);
     });
-  }, [getData]);
+  }, []);
 
   useEffect(() => {
     let sortingAsObject = {};
