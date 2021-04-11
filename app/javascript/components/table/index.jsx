@@ -2,22 +2,14 @@ import React, { useState, useEffect } from "react";
 
 import Body from "./Body";
 import Header from "./Header";
-import SortingArrow from "./SortingArrow";
+import ColumnName from "./ColumnName";
+import changeOrder from "./changeOrder";
+import arrayToObject from "./arrayToObject";
 
-const ColumnName = ({ label, sorting, onClick }) => (
-  <span style={{ cursor: "pointer" }} onClick={() => onClick(label)}>
-    {label} <SortingArrow order={sorting} />
-  </span>
-);
+const byLabel = (value) => ({ label }) => label === value;
+const rejectByLabel = (value) => ({ label }) => label !== value;
 
-const nextSorting = (order) => {
-  const nextAfter = {
-    "asc": "desc",
-    "desc": null,
-    [null]: "asc"
-  };
-  return nextAfter[order];
-};
+const initialSorting = (columns) => columns.map(label => ({ label, order: null }));
 
 const Table = ({ getData }) => {
   const [sorting, setSorting] = useState([]);
@@ -26,9 +18,7 @@ const Table = ({ getData }) => {
   const [columnHeaders, setColumnHeaders] = useState([]);
 
   useEffect(() => {
-    setSorting(
-      columns.map(label => ({ label, sorting: null }))
-    );
+    setSorting(initialSorting(columns));
   }, [columns]);
 
   useEffect(() => {
@@ -39,40 +29,27 @@ const Table = ({ getData }) => {
   }, []);
 
   useEffect(() => {
-    let sortingAsObject = {};
-    sorting.forEach(({ label, sorting }) => {
-      if (sorting != null) {
-        sortingAsObject[label] = sorting;
-      }
-    });
-    getData(sortingAsObject).then(data => {
+    getData(arrayToObject(sorting)).then(data => {
       setRows(data);
     });
   }, [sorting]);
 
-  const changeSorting = (columnLabel) => {
-    let newSorting = sorting.filter(({ label }) => label != columnLabel);
+  const changeSorting = (label) => {
+    let currentOrder = sorting.find(byLabel(label)).order;
+    let newSorting = sorting.filter(rejectByLabel(label));
     newSorting.unshift({
-      label: columnLabel,
-      sorting: nextSorting(sorting.find(({ label }) => label == columnLabel).sorting)
+      label, order: changeOrder(currentOrder)
     });
     setSorting(newSorting);
   };
 
   useEffect(() => {
-    const byLabel = (value) => ({ label }) => label === value;
-
     let newColumnHeaders = columns.map(columnName => {
-      return (
-        <ColumnName
-          {...sorting.find(byLabel(columnName))}
-          onClick={changeSorting}
-        />
-      );
+      let columnOrder = sorting.find(byLabel(columnName));
+      return <ColumnName {...columnOrder} onClick={changeSorting} />;
     });
     setColumnHeaders(newColumnHeaders);
   }, [sorting]);
-
 
   return (
     <table>
