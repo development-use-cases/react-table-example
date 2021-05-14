@@ -1,9 +1,7 @@
-import axios from 'axios';
+import { get } from './get';
 
-export const getShares = () => axios
-  .get('/api/shares.json')
-  .then(response => response.data);
+export const getShares = (params = {}) =>
+  get('/api/shares.json', params);
 
-export const getShare = (id) => axios
-  .get(`/api/shares/${id}.json`)
-  .then(response => response.data);
+export const getShare = (id) =>
+  get(`/api/shares/${id}.json`);

@@ -1,1 +1,1 @@
-json.array! @quotes, partial: "api/quotes/quote_rich", as: :quote
+json.array! @quotes, partial: 'api/quotes/quote', as: :quote

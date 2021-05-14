@@ -1,2 +1,1 @@
-json.extract! share, :id, :ticker, :country
-json.company share.company_title
+json.extract! share, :id, :ticker, :country, :company_title

@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import Table from './table/index';
-
+import Table from './table';
 import { getShares } from '../api/shares';
 
 const Shares = () => {
-  const [shares, setShares] = useState([]);
-
-  useEffect(() => {
-    getShares().then(shares => setShares(shares))
-  }, []);
-
-  return (<Table data={shares} columns={Object.keys(shares[0] || {})} />);
+  return (
+    <>
+      <h2>Shares</h2>
+      <Table getData={sort => getShares({ sort })} />
+    </>
+  );
 }
 
 export default Shares;
